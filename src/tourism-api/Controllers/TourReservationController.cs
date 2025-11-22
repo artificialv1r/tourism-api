@@ -3,7 +3,7 @@ using tourism_api.Domain;
 using tourism_api.Repositories;
 
 namespace tourism_api.Controllers;
-[Route("api/tours/reservations")]
+[Route("api/tours/{tourId}/reservations")]
 [ApiController]
 
 public class TourReservationController:ControllerBase
@@ -19,7 +19,7 @@ public class TourReservationController:ControllerBase
         _tourRepository = new TourRepository(configuration);
     }
 
-    [HttpGet("{tourId}")]
+    [HttpGet]
     public ActionResult GetByTourId(int tourId)
     {
         try
@@ -36,7 +36,7 @@ public class TourReservationController:ControllerBase
 
     [HttpPost]
 
-    public ActionResult<TourReservation> Create([FromBody] TourReservation newTourReservation)
+    public ActionResult<TourReservation> Create(int tourId, [FromBody] TourReservation newTourReservation)
     {
         if (!newTourReservation.IsValid())
         {
@@ -44,7 +44,13 @@ public class TourReservationController:ControllerBase
         }
         
         List<TourReservation> reservations = _tourReservationRepository.GetReservationsByTourId(newTourReservation.TourId);
-        Tour selecetedTour = _tourRepository.GetById(newTourReservation.TourId);
+        Tour selecetedTour = _tourRepository.GetById(tourId);
+
+        if (selecetedTour == null)
+        {
+            return NotFound();
+        }
+        
         int reservedSeats = 0;
         foreach (TourReservation reservation in reservations)
         {
