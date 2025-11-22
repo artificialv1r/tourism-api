@@ -3,7 +3,7 @@ using tourism_api.Domain;
 using tourism_api.Repositories;
 
 namespace tourism_api.Controllers;
-[Route("api/tour/reservations")]
+[Route("api/tours/reservations")]
 [ApiController]
 
 public class TourReservationController:ControllerBase
@@ -25,10 +25,6 @@ public class TourReservationController:ControllerBase
         try
         {
             List<TourReservation> reservations = _tourReservationRepository.GetReservationsByTourId(tourId);
-            if (reservations.Count == 0)
-            {
-                return NotFound($"Reservation with tour Id {tourId} not found");
-            }
 
             return Ok(reservations);
         }
