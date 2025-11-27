@@ -33,6 +33,24 @@ public class TourReservationController:ControllerBase
             return Problem("An error occurred while fetching the reservations." + e.Message);
         }
     }
+    
+    [HttpGet("{id}")]
+    public ActionResult<TourReservation> GetById(int id)
+    {
+        try
+        {
+            TourReservation reservation = _tourReservationRepository.GetById(id);
+            if (reservation == null)
+            {
+                return NotFound($"Tour reservation with ID {id} not found.");
+            }
+            return Ok(reservation);
+        }
+        catch (Exception ex)
+        {
+            return Problem("An error occurred while fetching the tour reservation.");
+        }
+    }
 
     [HttpPost]
 
